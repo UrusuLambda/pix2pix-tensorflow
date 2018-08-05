@@ -46,8 +46,8 @@ def main(_):
     if not os.path.exists(args.test_dir):
         os.makedirs(args.test_dir)
 
-    //config = tf.ConfigProto()
-    //config.gpu_options.allow_growth = True
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth = True
     with tf.Session() as sess:
         model = pix2pix(sess, image_size=args.fine_size, batch_size=args.batch_size,
                         output_size=args.fine_size, dataset_name=args.dataset_name, gf_dim=args.ngf,
