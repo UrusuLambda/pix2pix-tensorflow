@@ -5,6 +5,8 @@ import numpy as np
 
 from model import pix2pix
 import tensorflow as tf
+import sys
+sys.path.append('./../drive/adblockgan')
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--dataset_name', dest='dataset_name', default='facades', help='name of the dataset')
@@ -29,7 +31,7 @@ parser.add_argument('--print_freq', dest='print_freq', type=int, default=50, hel
 parser.add_argument('--continue_train', dest='continue_train', type=bool, default=False, help='if continue training, load the latest model: 1: true, 0: false')
 parser.add_argument('--serial_batches', dest='serial_batches', type=bool, default=False, help='f 1, takes images in order to make batches, otherwise takes them randomly')
 parser.add_argument('--serial_batch_iter', dest='serial_batch_iter', type=bool, default=True, help='iter into serial image list')
-parser.add_argument('--checkpoint_dir', dest='checkpoint_dir', default='./checkpoint', help='models are saved here')
+parser.add_argument('--checkpoint_dir', dest='checkpoint_dir', default='./../drive/adblockgan/checkpoint', help='models are saved here')
 parser.add_argument('--sample_dir', dest='sample_dir', default='./sample', help='sample are saved here')
 parser.add_argument('--test_dir', dest='test_dir', default='./test', help='test sample are saved here')
 parser.add_argument('--L1_lambda', dest='L1_lambda', type=float, default=100.0, help='weight on L1 term in objective')
@@ -44,7 +46,9 @@ def main(_):
     if not os.path.exists(args.test_dir):
         os.makedirs(args.test_dir)
 
-    with tf.Session() as sess:
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    with tf.Session(config=config) as sess:
         model = pix2pix(sess, image_size=args.fine_size, batch_size=args.batch_size,
                         output_size=args.fine_size, dataset_name=args.dataset_name,
                         checkpoint_dir=args.checkpoint_dir, sample_dir=args.sample_dir)
